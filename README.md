@@ -32,7 +32,7 @@ The schema includes the following tables:
 2. Create the database:
    ```bash
    psql postgres
-   CREATE DATABASE OnlineBookstore;
+   CREATE DATABASE onlinebookstore;
    ```
 
 ### Import Schema and Seed Data
