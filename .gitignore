@@ -1,0 +1,56 @@
+## User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+## User-specific folders
+.vscode/
+.vscode/*
+*.code-workspace
+
+## Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa]ppPackages/
+*.build.cs
+
+## Log files
+*.log
+
+## OS-generated files
+.DS_Store
+Thumbs.db
+
+## IDE folders
+.idea/
+.vscode/
+*.vs/
+
+## Entity Framework migrations
+Migrations/
+
+## .NET Core
+bin/
+obj/
+!.gitkeep
+project.lock.json
+project.fragment.lock.json
+
+## Rider IDE
+.idea/
+.idea/workspace.xml
+
+# Include for environments
+.env
+.env.*
+.env.local
+
+# JetBrains Rider
+.idea/
+
+# Visual Studio Code
+.vscode/
