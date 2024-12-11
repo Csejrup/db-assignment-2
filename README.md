@@ -2,11 +2,13 @@
 # Relational Database for Online Bookstore
 
 ## Overview
-This part of the project focuses on the design and implementation of the relational database for the Online Bookstore application. PostgreSQL is used as the relational database to store core transactional data such as orders, customers, books, and authors.
+This project implements a relational database design and C# console application for managing an online bookstore. The system allows handling books, authors, customers, and orders, providing essential CRUD operations for seamless database interaction. PostgreSQL is used as the relational database to store transactional data.
+**(update this when Redis is implemented)**
+---
 
 ## Database Schema
 
-The relational database schema is designed to handle the following entities:
+The database schema supports the following entities:
 - **Authors**: Information about book authors.
 - **Books**: Details of books, including pricing and stock levels.
 - **Customers**: Data about customers placing orders.
@@ -19,6 +21,8 @@ The schema includes the following tables:
 - `Customers`: Stores customer information.
 - `Orders`: Stores order information, linked to customers.
 - `OrderDetails`: Stores individual items in an order, linked to books.
+
+---
 
 ## Database Setup
 
@@ -35,50 +39,123 @@ The schema includes the following tables:
    CREATE DATABASE onlinebookstore;
    ```
 
+3. Navigate to the project folder containing the `Database` folder.
+
 ### Import Schema and Seed Data
-1. Navigate to the `Database` folder:
-
-2. Execute the schema script:
+1. Execute the schema script to create tables:
    ```bash
-   psql -d onlinebookstore -f Schema.sql
+   psql -d onlinebookstore -f Database/Schema.sql
    ```
 
-3. Seed the database with sample data:
+2. Seed the database with sample data:
    ```bash
-   psql -d onlinebookstore -f SeedData.sql
+   psql -d onlinebookstore -f Database/SeedData.sql
    ```
 
-## CRUD Operations
+---
 
-The following operations are implemented in the application:
-1. **Create New Orders**:
-    - Adds a new order to the `Orders` table.
-    - Updates the inventory in the `Books` table.
+## C# Console Application
 
-2. **Retrieve Customer and Order Details**:
-    - Fetches customer information and their associated orders.
+### Overview
+The C# console application interacts with the PostgreSQL database to manage books, authors, orders, and customers. The application uses `Entity Framework Core` for database interaction and implements the repository and service patterns.
 
-3. **Update Inventory**:
-    - Reduces stock levels when an order is placed.
+### Features
+1. **Add a New Book**:
+    - Allows adding books to the `Books` table.
+2. **View All Books**:
+    - Displays all books, including stock levels and prices.
+3. **Update Book Stock**:
+    - Updates inventory levels for specific books.
+4. **Place Orders** (Extensible):
+    - Records new orders and updates inventory levels.
 
-## Files and Structure
-- **SQL Scripts**:
-    - Located in the `Database` folder.
-    - `Schema.sql`: Contains table creation statements.
-    - `SeedData.sql`: Contains sample data.
+### Files and Structure
+- **Database Scripts**:
+    - Located in the `Database` folder:
+        - `Schema.sql`: Contains table creation statements.
+        - `SeedData.sql`: Contains sample data for testing.
+- **C# Files**:
+    - `AppDbContext`: Configures PostgreSQL database interaction.
+    - `Models`: Defines entities (`Author`, `Book`, `Customer`, etc.).
+    - `Repositories`: Contains CRUD logic for database tables.
+    - `Services`: Contains business logic, e.g., `BookService`.
+    - `Program.cs`: Main entry point, includes an interactive menu for user actions.
 
-- **C# CRUD Operations**:
-    - Implemented in `Repositories` for database interaction.
-    - Business logic for inventory and orders is in `Services`.
+---
+
+## Running the Application
+
+### Prerequisites
+1. Install .NET 9 SDK:
+   ```bash
+   brew install --cask dotnet
+   ```
+2. Restore dependencies:
+   ```bash
+   dotnet restore
+   ```
+
+### Running the Application
+1. Navigate to the project folder:
+   ```bash
+   cd OnlineBookstore
+   ```
+2. Run the application:
+   ```bash
+   dotnet run
+   ```
+
+3. Follow the menu prompts to:
+    - Add books.
+    - View all books.
+    - Update stock levels.
+
+---
 
 ## Testing
 
 ### Database Queries
-Test SQL queries directly in the PostgreSQL CLI or GUI tools like pgAdmin.
+1. Test the SQL scripts in `psql` or a PostgreSQL GUI tool like pgAdmin.
+2. Verify the following queries:
+    - Retrieve all books with their authors.
+    - Retrieve orders with their details.
 
-### Application
-Run the application and verify:
-- Orders are saved correctly.
-- Inventory levels are updated.
-- Customer and order details are fetched without errors.
+### Application Testing
+1. Run the application with sample data.
+2. Test the following scenarios:
+    - Add a new book and verify it appears in the database.
+    - Update stock for a book and confirm the changes.
+    - View all books to ensure accurate data retrieval.
 
+---
+
+## Documentation
+
+### Design Choices
+1. **PostgreSQL**: Chosen for its relational capabilities and support for foreign keys.
+2. **C# with Entity Framework Core**: Simplifies database interaction and supports LINQ queries.
+3. **Repository Pattern**: Ensures separation of concerns between business logic and data access.
+
+### Future Improvements
+- Extend the application to handle full order processing.
+- Add Redis caching for frequently accessed data.
+- Implement API endpoints for a web-based interface.
+---
+### Updating the Connection String
+
+Before running the application, ensure that the connection string in `AppDbContext` matches your local PostgreSQL database configuration.
+
+1. Open the `AppDbContext` file in the project.
+2. Locate the `UseNpgsql` line in the `OnConfiguring` method:
+   ```csharp
+   optionsBuilder.UseNpgsql("Host=localhost;Database=onlinebookstore;Username=postgres;Password=yourpassword");
+   ```
+3. Update the following parts of the connection string as needed:
+    - `Host`: The hostname or IP address of your PostgreSQL server (e.g., `localhost` or `127.0.0.1`).
+    - `Database`: The name of your database (default is `onlinebookstore`).
+    - `Username`: Your PostgreSQL username (default is `postgres`).
+    - `Password`: Your PostgreSQL password.
+
+4. Save the changes and re-run the application.
+
+---
