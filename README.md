@@ -4,8 +4,6 @@
 ## Overview
 This part of the project focuses on the design and implementation of the relational database for the Online Bookstore application. PostgreSQL is used as the relational database to store core transactional data such as orders, customers, books, and authors.
 
----
-
 ## Database Schema
 
 The relational database schema is designed to handle the following entities:
@@ -21,8 +19,6 @@ The schema includes the following tables:
 - `Customers`: Stores customer information.
 - `Orders`: Stores order information, linked to customers.
 - `OrderDetails`: Stores individual items in an order, linked to books.
-
----
 
 ## Database Setup
 
@@ -41,9 +37,6 @@ The schema includes the following tables:
 
 ### Import Schema and Seed Data
 1. Navigate to the `Database` folder:
-   ```bash
-   cd OnlineBookstore/Database
-   ```
 
 2. Execute the schema script:
    ```bash
@@ -52,10 +45,8 @@ The schema includes the following tables:
 
 3. Seed the database with sample data:
    ```bash
-   psql -d OnlineBookstore -f SeedData.sql
+   psql -d onlinebookstore -f SeedData.sql
    ```
-
----
 
 ## CRUD Operations
 
@@ -70,11 +61,7 @@ The following operations are implemented in the application:
 3. **Update Inventory**:
     - Reduces stock levels when an order is placed.
 
----
-
-## Contribution Notes
-
-### Files and Structure
+## Files and Structure
 - **SQL Scripts**:
     - Located in the `Database` folder.
     - `Schema.sql`: Contains table creation statements.
@@ -84,18 +71,10 @@ The following operations are implemented in the application:
     - Implemented in `Repositories` for database interaction.
     - Business logic for inventory and orders is in `Services`.
 
-### Commit History
-Make incremental commits for:
-1. Initial database schema (`Schema.sql`).
-2. Sample data (`SeedData.sql`).
-3. CRUD operations in `Repositories`.
-
----
-
 ## Testing
 
 ### Database Queries
-Test SQL queries directly in the PostgreSQL CLI or GUI tools like DBeaver.
+Test SQL queries directly in the PostgreSQL CLI or GUI tools like pgAdmin.
 
 ### Application
 Run the application and verify:
@@ -103,4 +82,3 @@ Run the application and verify:
 - Inventory levels are updated.
 - Customer and order details are fetched without errors.
 
----
