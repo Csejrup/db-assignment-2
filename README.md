@@ -3,7 +3,6 @@
 
 ## Overview
 This project implements a relational database design and C# console application for managing an online bookstore. The system allows handling books, authors, customers, and orders, providing essential CRUD operations for seamless database interaction. PostgreSQL is used as the relational database to store transactional data.
-**(Update this section when Redis is implemented)**
 
 ---
 
@@ -41,6 +40,12 @@ The schema includes the following tables:
    ```
 
 3. Navigate to the project folder containing the `Database` folder.
+
+4. Install and run Redis:
+    ```bash
+     brew install redis
+     redis-server
+    ```
 
 ### Import Schema and Seed Data
 1. Execute the schema script to create tables:
@@ -170,9 +175,9 @@ For faster queries, the following indexes are added in `Schema.sql`:
 1. **PostgreSQL**: Chosen for its relational capabilities and support for foreign keys.
 2. **C# with Entity Framework Core**: Simplifies database interaction and supports LINQ queries.
 3. **Repository Pattern**: Ensures separation of concerns between business logic and data access.
+4. **Redis**: Added noSql db for caching frequently accessed data.
 
 ### Future Improvements
-- Add Redis caching for frequently accessed data.
 - Implement API endpoints for a web-based interface.
 
 ---

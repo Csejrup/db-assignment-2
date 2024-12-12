@@ -13,7 +13,7 @@ internal abstract class Program
         {
             await using var context = new AppDbContext();
 
-            // Add RedisCacheService as a singleton to the DI container
+            // Update redisConnectionString to yours 
             var redisCacheService = new RedisCacheService("redisConnectionString");
 
             var bookRepo = new BookRepository(context);
