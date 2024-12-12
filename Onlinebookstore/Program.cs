@@ -1,4 +1,5 @@
-﻿using Onlinebookstore.Models;
+﻿using System.Diagnostics;
+using Onlinebookstore.Models;
 using Onlinebookstore.Repositories;
 using Onlinebookstore.Services;
 
@@ -11,8 +12,12 @@ internal abstract class Program
         try
         {
             await using var context = new AppDbContext();
+
+            // Add RedisCacheService as a singleton to the DI container
+            var redisCacheService = new RedisCacheService("redisConnectionString");
+
             var bookRepo = new BookRepository(context);
-            var bookService = new BookService(bookRepo);
+            var bookService = new BookService(bookRepo, redisCacheService);
 
             bool running = true;
 
@@ -25,7 +30,7 @@ internal abstract class Program
                 Console.WriteLine("3. Update Book Stock");
                 Console.WriteLine("4. Create a New Order");
                 Console.WriteLine("5. View Customer and Order Details");
-                Console.WriteLine("6. Exit");
+                Console.WriteLine("6. Test - Get all books time with and without cache");
                 Console.Write("Choose an option: ");
 
                 string? choice = Console.ReadLine();
@@ -50,6 +55,9 @@ internal abstract class Program
                             await ViewCustomerOrdersAsync(new OrderRepository(context));
                             break;
                         case "6":
+                            await TestCachePerformance(bookService);
+                            break;
+                        case "7":
                             running = false;
                             Console.WriteLine("Exiting...");
                             break;
@@ -222,6 +230,35 @@ internal abstract class Program
                     Console.WriteLine($"  - Book ID: {detail.BookID}, Quantity: {detail.Quantity}, Price: ${detail.Price}");
                 }
             }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error retrieving customer orders: {ex.Message}");
+        }
+    }
+    
+    private static async Task TestCachePerformance(BookService bookService)
+    {
+        Console.Clear();
+
+        try
+        {
+            
+            // Just to fill out cache
+            await bookService.GetAllBooksAsync();
+            
+            
+            var stopwatchCache = Stopwatch.StartNew();
+            await bookService.GetAllBooksAsync();
+            stopwatchCache.Stop();
+
+            var stopwatch = Stopwatch.StartNew();
+            await bookService.GetAllBooksAsyncWithoutCache();
+            stopwatch.Stop();
+            
+            Console.WriteLine($"Elapsed time without cache: {stopwatch.Elapsed} \n Elapsed time with cache: {stopwatchCache.Elapsed}");
+
+
         }
         catch (Exception ex)
         {
