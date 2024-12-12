@@ -1,43 +1,48 @@
-
--- Schema.sql: Database Schema for Online Bookstore
-
 -- Authors Table
-CREATE TABLE Authors (
-    AuthorID SERIAL PRIMARY KEY,
-    Name VARCHAR(255) NOT NULL,
-    Biography TEXT
+CREATE TABLE authors (
+    authorid SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    biography TEXT
 );
 
 -- Books Table
-CREATE TABLE Books (
-    BookID SERIAL PRIMARY KEY,
-    Title VARCHAR(255) NOT NULL,
-    AuthorID INT REFERENCES Authors(AuthorID),
-    Price DECIMAL(10, 2) NOT NULL,
-    Stock INT NOT NULL
+CREATE TABLE books (
+    bookid SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    authorid INT REFERENCES authors(authorid),
+    price DECIMAL(10, 2) NOT NULL,
+    stock INT NOT NULL
 );
 
 -- Customers Table
-CREATE TABLE Customers (
-    CustomerID SERIAL PRIMARY KEY,
-    Name VARCHAR(255) NOT NULL,
-    Email VARCHAR(255) UNIQUE NOT NULL,
-    Address TEXT
+CREATE TABLE customers (
+    customerid SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    address TEXT
 );
 
 -- Orders Table
-CREATE TABLE Orders (
-    OrderID SERIAL PRIMARY KEY,
-    CustomerID INT REFERENCES Customers(CustomerID),
-    OrderDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    TotalAmount DECIMAL(10, 2) NOT NULL
+CREATE TABLE orders (
+    orderid SERIAL PRIMARY KEY,
+    customerid INT REFERENCES customers(customerid),
+    orderdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    totalamount DECIMAL(10, 2) NOT NULL
 );
 
 -- OrderDetails Table
-CREATE TABLE OrderDetails (
-    OrderDetailID SERIAL PRIMARY KEY,
-    OrderID INT REFERENCES Orders(OrderID),
-    BookID INT REFERENCES Books(BookID),
-    Quantity INT NOT NULL,
-    Price DECIMAL(10, 2) NOT NULL
+CREATE TABLE orderdetails (
+    orderdetailid SERIAL PRIMARY KEY,
+    orderid INT REFERENCES orders(orderid) ON DELETE CASCADE,
+    bookid INT REFERENCES books(bookid),
+    quantity INT NOT NULL,
+    price DECIMAL(10, 2) NOT NULL
 );
+
+-- Indexes for Optimization
+CREATE INDEX idx_books_authorid ON books(authorid);
+CREATE INDEX idx_orders_customerid ON orders(customerid);
+CREATE INDEX idx_orderdetails_orderid ON orderdetails(orderid);
+CREATE INDEX idx_orderdetails_bookid ON orderdetails(bookid);
+CREATE INDEX idx_books_stock ON books(stock);
+CREATE INDEX idx_orders_orderdate ON orders(orderdate);

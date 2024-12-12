@@ -1,9 +1,10 @@
 
-# Relational Database for Online Bookstore
+# Online Bookstore
 
 ## Overview
 This project implements a relational database design and C# console application for managing an online bookstore. The system allows handling books, authors, customers, and orders, providing essential CRUD operations for seamless database interaction. PostgreSQL is used as the relational database to store transactional data.
-**(update this when Redis is implemented)**
+**(Update this section when Redis is implemented)**
+
 ---
 
 ## Database Schema
@@ -66,14 +67,14 @@ The C# console application interacts with the PostgreSQL database to manage book
     - Displays all books, including stock levels and prices.
 3. **Update Book Stock**:
     - Updates inventory levels for specific books.
-4. **Place Orders** (Extensible):
+4. **Place Orders**:
     - Records new orders and updates inventory levels.
 
 ### Files and Structure
 - **Database Scripts**:
     - Located in the `Database` folder:
         - `Schema.sql`: Contains table creation statements.
-        - `SeedData.sql`: Contains sample data for testing.
+        - `SeedData.sql`: Contains sample data.
 - **C# Files**:
     - `AppDbContext`: Configures PostgreSQL database interaction.
     - `Models`: Defines entities (`Author`, `Book`, `Customer`, etc.).
@@ -116,9 +117,43 @@ The C# console application interacts with the PostgreSQL database to manage book
 
 ### Database Queries
 1. Test the SQL scripts in `psql` or a PostgreSQL GUI tool like pgAdmin.
-2. Verify the following queries:
-    - Retrieve all books with their authors.
-    - Retrieve orders with their details.
+2. Run the following test queries for accuracy and optimization:
+
+#### **Test Queries**
+
+Execute the schema script to create tables:
+   ```bash
+   psql -d onlinebookstore -f Database/TestQueries.sql
+   ```
+
+- Retrieve all books with authors:
+   ```sql
+   SELECT b.bookid, b.title, b.price, b.stock, a.name AS author_name
+   FROM books b
+            JOIN authors a ON b.authorid = a.authorid;
+   ```
+
+- Retrieve all orders with details:
+   ```sql
+   SELECT o.orderid, o.orderdate, o.totalamount, c.name AS customer_name, c.email
+   FROM orders o
+            JOIN customers c ON o.customerid = c.customerid;
+   ```
+
+- Retrieve total stock of books:
+   ```sql
+   SELECT SUM(stock) AS total_stock FROM books;
+   ```
+
+#### **Indexing and Optimization**
+For faster queries, the following indexes are added in `Schema.sql`:
+   ```sql
+   CREATE INDEX idx_books_authorid ON books(authorid);
+   CREATE INDEX idx_orders_customerid ON orders(customerid);
+   CREATE INDEX idx_orderdetails_orderid ON orderdetails(orderid);
+   CREATE INDEX idx_books_stock ON books(stock);
+   CREATE INDEX idx_orders_orderdate ON orders(orderdate);
+   ```
 
 ### Application Testing
 1. Run the application with sample data.
@@ -137,10 +172,11 @@ The C# console application interacts with the PostgreSQL database to manage book
 3. **Repository Pattern**: Ensures separation of concerns between business logic and data access.
 
 ### Future Improvements
-- Extend the application to handle full order processing.
 - Add Redis caching for frequently accessed data.
 - Implement API endpoints for a web-based interface.
+
 ---
+
 ### Updating the Connection String
 
 Before running the application, ensure that the connection string in `AppDbContext` matches your local PostgreSQL database configuration.
@@ -158,4 +194,3 @@ Before running the application, ensure that the connection string in `AppDbConte
 
 4. Save the changes and re-run the application.
 
----

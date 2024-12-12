@@ -21,7 +21,10 @@ public class BookService(BookRepository bookRepository)
         };
         await bookRepository.AddBookAsync(book);
     }
-
+    public async Task<Book?> GetBookByIdAsync(int bookId)
+    {
+        return await bookRepository.GetBookByIdAsync(bookId);
+    }
     public async Task UpdateStockAsync(int bookId, int quantity)
     {
         await bookRepository.UpdateBookStockAsync(bookId, quantity);
