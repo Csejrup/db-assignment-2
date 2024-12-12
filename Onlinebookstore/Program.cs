@@ -17,8 +17,10 @@ internal abstract class Program
             var redisCacheService = new RedisCacheService("redisConnectionString");
 
             var bookRepo = new BookRepository(context);
+            var authorRepo = new AuthorRepository(context);
             var bookService = new BookService(bookRepo, redisCacheService);
-
+            var authorService = new AuthorService(authorRepo, redisCacheService);
+            
             bool running = true;
 
             while (running)
@@ -30,7 +32,8 @@ internal abstract class Program
                 Console.WriteLine("3. Update Book Stock");
                 Console.WriteLine("4. Create a New Order");
                 Console.WriteLine("5. View Customer and Order Details");
-                Console.WriteLine("6. Test - Get all books time with and without cache");
+                Console.WriteLine("6. Get all Authors and biographies");
+                Console.WriteLine("7. Test - Get all books time with and without cache");
                 Console.Write("Choose an option: ");
 
                 string? choice = Console.ReadLine();
@@ -55,9 +58,12 @@ internal abstract class Program
                             await ViewCustomerOrdersAsync(new OrderRepository(context));
                             break;
                         case "6":
-                            await TestCachePerformance(bookService);
+                            await ViewAuthorsAsync(authorService);
                             break;
                         case "7":
+                            await TestCachePerformance(bookService);
+                            break;
+                        case "8":
                             running = false;
                             Console.WriteLine("Exiting...");
                             break;
@@ -133,6 +139,26 @@ internal abstract class Program
         catch (Exception ex)
         {
             Console.WriteLine($"Error retrieving books: {ex.Message}");
+        }
+    }
+    
+    
+    private static async Task ViewAuthorsAsync(AuthorService authorService)
+    {
+        Console.Clear();
+        Console.WriteLine("=== Authors available ===");
+
+        try
+        {
+            var authors = await authorService.GetAllAuthorsAsync();
+            foreach (var author in authors)
+            {
+                Console.WriteLine($"{author.AuthorID}: {author.Name} Biography {author.Biography}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error retrieving authors: {ex.Message}");
         }
     }
 
