@@ -1,8 +1,7 @@
-using StackExchange.Redis;
-using System;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
+using StackExchange.Redis;
+
+namespace Onlinebookstore.Redis;
 
 public class RedisCacheService
 {

@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using Onlinebookstore.Models;
+using Onlinebookstore.Redis;
 using Onlinebookstore.Repositories;
 using Onlinebookstore.Services;
 

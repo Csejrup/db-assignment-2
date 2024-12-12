@@ -1,4 +1,5 @@
 using Onlinebookstore.Models;
+using Onlinebookstore.Redis;
 using Onlinebookstore.Repositories;
 
 namespace Onlinebookstore.Services;
@@ -32,8 +33,6 @@ public class BookService(BookRepository bookRepository, RedisCacheService cacheS
 
     public async Task AddBookAsync(string title, int authorId, decimal price, int stock)
     {
-        
-        
         var book = new Book
         {
             Title = title,
